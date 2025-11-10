@@ -29,7 +29,20 @@ export default function AllPerks() {
  * useEffect Hook #2: Auto-search on Input Change
 
 */
+  useEffect(() => {
+      loadAllPerks()
+    }, []) 
 
+  
+  useEffect(() => {
+    if (searchQuery.trim() !== '' || merchantFilter.trim() !== '') {
+      const timeoutId = setTimeout(() => {
+        loadAllPerks()
+      }, 300) 
+      return () => clearTimeout(timeoutId)
+    }
+  }, [searchQuery, merchantFilter]) 
+  
   
   useEffect(() => {
     // Extract all merchant names from perks array
@@ -123,7 +136,6 @@ export default function AllPerks() {
       {/* Search and Filter Form */}
       <div className="card">
         <form onSubmit={handleSearch} className="space-y-4">
-          
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             
             
@@ -136,6 +148,8 @@ export default function AllPerks() {
                 type="text"
                 className="input"
                 placeholder="Enter perk name..."
+                value={searchQuery}
+                onChange={e => setSearchQuery(e.target.value)}
                 
               />
               <p className="text-xs text-zinc-500 mt-1">
@@ -151,7 +165,8 @@ export default function AllPerks() {
               </label>
               <select
                 className="input"
-                
+                value={merchantFilter}
+                onChange={e => setMerchantFilter(e.target.value)}
               >
                 <option value="">All Merchants</option>
                 
